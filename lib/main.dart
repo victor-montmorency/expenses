@@ -39,26 +39,47 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  final List<Transaction> _transactions = [];
-  _addTransaction(String title, double value) {
+  final List<Transaction> _transactions = []; //Main List of Transactions
+
+  List<Transaction> get _recentTransactions {
+    return _transactions.where(
+      (tr) {
+        return tr.date.isAfter(
+          DateTime.now().subtract(
+            Duration(days: 7),
+          ),
+        );
+      },
+    ).toList();
+  }
+
+  _addTransaction(String title, double value, DateTime date) {
     final newTransaction = Transaction(
       id: Random().nextDouble().toString(),
       tittle: title,
       value: value,
-      date: DateTime.now(),
+      date: date,
     );
-
     setState(() {
       _transactions.add(newTransaction);
     });
     Navigator.of(context).pop();
   }
 
+  _removeTransaction(String id) {
+    setState(() {
+      _transactions.removeWhere((tr) => tr.id == id);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(_transactions);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _openTransactionFormModal(context),
+        onPressed: () {
+          _openTransactionFormModal(context);
+        },
         child: Icon(
           Icons.add,
         ),
@@ -71,8 +92,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       body: Column(children: [
-        Graphics(_transactions),
-        TransactionList(_transactions),
+        Graphics(_recentTransactions),
+        TransactionList(_transactions, _removeTransaction),
       ]),
     );
   }

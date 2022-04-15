@@ -6,7 +6,8 @@ import '../main.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
-  TransactionList(this.transactions);
+  final void Function(String) onRemove;
+  TransactionList(this.transactions, this.onRemove);
   @override
   Widget build(BuildContext context) {
     return transactions.isEmpty
@@ -57,7 +58,19 @@ class TransactionList extends StatelessWidget {
                             style: TextStyle(color: Colors.grey),
                           )
                         ],
-                      )
+                      ),
+                      Flexible(
+                          fit: FlexFit.tight,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                onPressed: () => onRemove(e.id),
+                                icon: Icon(Icons.delete),
+                                color: Theme.of(context).accentColor,
+                              ),
+                            ],
+                          ))
                     ],
                   ),
                 );
