@@ -25,7 +25,7 @@ class _TransactionFormState extends State<TransactionForm> {
       return;
     }
 
-    widget.onSubmit!(title, value, _selectedDate!);
+    widget.onSubmit!(title, value, _selectedDate);
   }
 
   _showDatePicker() {
@@ -47,63 +47,66 @@ class _TransactionFormState extends State<TransactionForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      child: Padding(
-        padding: const EdgeInsets.all(25.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _titlecontroller,
-              decoration: InputDecoration(labelText: 'Titulo: '),
-              onSubmitted: (_) => _submitForm(),
-            ),
-            TextField(
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-              onSubmitted: (_) => _submitForm(),
-              controller: _valuecontroller,
-              decoration: InputDecoration(labelText: 'Valor: (R\$)'),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                    margin: EdgeInsets.symmetric(vertical: 30),
-                    child: Text(
-                      // ignore: unnecessary_null_comparison
-                      _selectedDate == null
-                          ? 'Nenhuma data selecionada!'
-                          : 'Data selecionada: ${DateFormat('dd/MM/y').format(_selectedDate!)}',
-                    )),
-                FlatButton(
-                  onPressed: _showDatePicker,
-                  child: Text(
-                    'Selecionar Data',
-                    style: TextStyle(color: Theme.of(context).accentColor),
-                  ),
-                )
-              ],
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).accentColor,
-                borderRadius: BorderRadius.all(Radius.circular(30)),
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 5,
+        child: Padding(
+          padding: EdgeInsets.only(
+              bottom: 10 + MediaQuery.of(context).viewInsets.bottom),
+          child: Column(
+            children: [
+              TextField(
+                controller: _titlecontroller,
+                decoration: InputDecoration(labelText: 'Titulo: '),
+                onSubmitted: (_) => _submitForm(),
               ),
-              margin: EdgeInsets.symmetric(vertical: 15),
-              child: FlatButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30)),
-                minWidth: double.infinity,
-                onPressed: _submitForm,
-                child: Text(
-                  'Nova Transação',
-                  style: TextStyle(
-                    color: Colors.white,
+              TextField(
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                onSubmitted: (_) => _submitForm(),
+                controller: _valuecontroller,
+                decoration: InputDecoration(labelText: 'Valor: (R\$)'),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                      margin: EdgeInsets.symmetric(vertical: 30),
+                      child: Text(
+                        // ignore: unnecessary_null_comparison
+                        _selectedDate == null
+                            ? 'Nenhuma data selecionada!'
+                            : 'Data selecionada: ${DateFormat('dd/MM/y').format(_selectedDate)}',
+                      )),
+                  FlatButton(
+                    onPressed: _showDatePicker,
+                    child: Text(
+                      'Selecionar Data',
+                      style: TextStyle(color: Theme.of(context).accentColor),
+                    ),
+                  )
+                ],
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).accentColor,
+                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                ),
+                margin: EdgeInsets.symmetric(vertical: 15),
+                child: FlatButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                  minWidth: double.infinity,
+                  onPressed: _submitForm,
+                  child: Text(
+                    'Nova Transação',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

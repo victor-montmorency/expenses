@@ -40,6 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   final List<Transaction> _transactions = []; //Main List of Transactions
+  bool _showChart = false;
 
   List<Transaction> get _recentTransactions {
     return _transactions.where(
@@ -74,7 +75,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    print(_transactions);
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -85,16 +88,40 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       appBar: AppBar(
+        actions: [
+          if (isLandscape)
+            Row(
+              children: [
+                Text('Exibir Gráfico'),
+                Switch(
+                    activeColor: Colors.white,
+                    value: _showChart,
+                    onChanged: (value) {
+                      setState(() {
+                        _showChart = value;
+                      });
+                    }),
+              ],
+            ),
+        ],
         backgroundColor: Theme.of(context).accentColor,
         title: const Text(
           'Gastos Semanais',
           style: TextStyle(fontWeight: FontWeight.w300),
         ),
       ),
-      body: Column(children: [
-        Graphics(_recentTransactions),
-        TransactionList(_transactions, _removeTransaction),
-      ]),
+      body: LayoutBuilder(builder: ((context, constraints) {
+        return Column(children: [
+          if (_showChart || !isLandscape)
+            SizedBox(
+              child: Graphics(_recentTransactions),
+              height: isLandscape
+                  ? constraints.maxHeight * 0.4
+                  : constraints.maxHeight * 0.2,
+            ),
+          TransactionList(_transactions, _removeTransaction),
+        ]);
+      })),
     );
   }
 }

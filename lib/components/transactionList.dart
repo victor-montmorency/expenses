@@ -11,7 +11,7 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return transactions.isEmpty
-        ? Column(
+        ? Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
